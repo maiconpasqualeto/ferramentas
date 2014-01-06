@@ -16,16 +16,12 @@ import org.apache.log4j.Logger;
  * @author maicon
  *
  */
-public class GenericDAO<T> {
+public class GenericDAO {
 
 	static Logger logger = Logger.getLogger(GenericDAO.class);
-	
-	public GenericDAO() {
 		
-	}
-
 		
-	public void salvar(T objeto, EntityManager em)throws DAOException{
+	public static <T> void salvar(T objeto, EntityManager em)throws DAOException{
 		try{
 			em.persist(objeto);
 		} catch(Exception e){
@@ -33,7 +29,7 @@ public class GenericDAO<T> {
 		} 
 	}
 	
-	public T merge(T objeto, EntityManager em)throws DAOException{
+	public static <T> T merge(T objeto, EntityManager em)throws DAOException{
 		T o = null;
 		try{
 			o = em.merge(objeto);
@@ -44,7 +40,7 @@ public class GenericDAO<T> {
 		return o;
 	}
 	
-	public T atualizar(T objeto, EntityManager em)throws DAOException{
+	public static <T> T atualizar(T objeto, EntityManager em)throws DAOException{
 		T o;
 		try{
 			o = em.merge(objeto);
@@ -54,7 +50,7 @@ public class GenericDAO<T> {
 		return o;
 	}
 	
-	public void excluir(T objeto, EntityManager em)throws DAOException{
+	public static <T> void excluir(T objeto, EntityManager em)throws DAOException{
 		try{			
 			em.remove(objeto);
 		} catch(Exception e){
@@ -62,8 +58,15 @@ public class GenericDAO<T> {
 		} 
 	}
 	
+	public static <T> void excluir(Serializable id, Class<T> classe, EntityManager em)throws DAOException{
+		try{
+			em.remove(em.find(classe, id));
+		} catch(Exception e){
+			throw new DAOException("Erro ao remover objeto", e, logger);
+		} 
+	}	
 	
-	public T buscar(Serializable id, Class<T> classe, EntityManager em) throws DAOException{
+	public static <T> T buscar(Serializable id, Class<T> classe, EntityManager em) throws DAOException{
 		T o = null;
 		try{
 			o = em.find(classe, id);
@@ -74,7 +77,7 @@ public class GenericDAO<T> {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<T> buscarTodos(Class<T> classe, EntityManager em) throws DAOException{
+	public static <T> List<T> buscarTodos(Class<T> classe, EntityManager em) throws DAOException{
 		Query query = null;
 		List<T> lista = null;
 		try{
@@ -87,7 +90,7 @@ public class GenericDAO<T> {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<T> buscarTodosOrdenados(Class<T> classe, String propriedade, EntityManager em)throws DAOException{
+	public static <T> List<T> buscarTodosOrdenados(Class<T> classe, String propriedade, EntityManager em)throws DAOException{
 		Query query = null;
 		List<T> lista = null;
 		try{

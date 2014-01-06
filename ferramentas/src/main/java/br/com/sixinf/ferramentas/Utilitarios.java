@@ -4,6 +4,9 @@ import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -554,5 +557,25 @@ public class Utilitarios {
 	   }
 	   else return false;
 	}
+	
+	/**
+	 * Método que faz a leitura de um stream usando um buffer e retorna um byte[]
+	 * 
+	 * @param is
+	 * @return
+	 * @throws IOException
+	 */
+	public static byte[] fazLeituraStreamEmByteArray(InputStream is) throws IOException{
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        byte[] buf = new byte[4096];
+        int lidos;
+        while ((lidos = is.read(buf)) > -1){
+            baos.write(buf, 0, lidos);
+        }
+        baos.flush();
+        byte[] bytes = baos.toByteArray();
+        baos.close();
+        return bytes;
+    }
 
 }
