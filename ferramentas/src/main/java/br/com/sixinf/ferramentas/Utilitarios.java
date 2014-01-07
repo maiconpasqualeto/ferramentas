@@ -8,6 +8,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -26,6 +27,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.math.util.MathUtils;
+import org.apache.log4j.Logger;
 
 
 
@@ -35,6 +37,8 @@ import org.apache.commons.math.util.MathUtils;
  * @author maicon
  */
 public class Utilitarios {
+	
+	private static final Logger LOG = Logger.getLogger(Utilitarios.class);
 	
 	public static String geraHashMd5(String senha){
 		String retorno = "";
@@ -402,15 +406,27 @@ public class Utilitarios {
 	}
 	
 	/**
-	 * Arredonda valor de um float para a quantidade de casas decimais passadas no par�metro 
-	 * @param number
-	 * @param digits
+	 * Arredonda valor de um float para a quantidade de casas decimais passadas no parametro 
+	 * @param numero
+	 * @param casasDecimais
 	 * @return
 	 */
 	public static float round(float numero, int casasDecimais){
 		long fator = (long) Math.pow(10, casasDecimais);		
 		numero *= fator;						
 		return (float) Math.round(numero) / fator;
+	}
+	
+	/**
+	 * Arredonda valor de um double para a quantidade de casas decimais passadas no parametro 
+	 * @param numero
+	 * @param casasDecimais
+	 * @return
+	 */
+	public static double round(double numero, int casasDecimais){
+		BigDecimal bd = new BigDecimal(numero);
+	    bd = bd.setScale(casasDecimais, BigDecimal.ROUND_DOWN);
+	    return bd.doubleValue();
 	}
 
 	
@@ -577,5 +593,23 @@ public class Utilitarios {
         baos.close();
         return bytes;
     }
+	
+	public static String geraHashSHA2(String str){
+		StringBuffer retorno = new StringBuffer();
+		try {
+			MessageDigest md = MessageDigest.getInstance("SHA-256");
+	        md.update(str.getBytes());
+	 
+	        byte byteData[] = md.digest();
+	        
+	        for (int i = 0; i < byteData.length; i++) {
+	        	retorno.append(Integer.toString((byteData[i] & 0xff) + 0x100, 16).substring(1));
+	        }
+	        
+		} catch (NoSuchAlgorithmException e) {
+			LOG.error("Algoritmo não encontrado", e);
+		}
+    	return retorno.toString();
+	}
 
 }
