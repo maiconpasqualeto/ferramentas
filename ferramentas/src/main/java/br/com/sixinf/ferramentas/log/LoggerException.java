@@ -10,6 +10,8 @@ import org.apache.log4j.Logger;
  *
  */
 public class LoggerException extends Exception {
+	
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * 
