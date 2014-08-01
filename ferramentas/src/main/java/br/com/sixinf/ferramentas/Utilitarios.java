@@ -593,7 +593,7 @@ public class Utilitarios {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         byte[] buf = new byte[4096];
         int lidos;
-        while ((lidos = is.read(buf)) > -1){
+        while ((lidos = is.read(buf)) > 0){
             baos.write(buf, 0, lidos);
         }
         baos.flush();
