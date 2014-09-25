@@ -5,8 +5,13 @@ import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -36,7 +41,9 @@ import org.apache.log4j.Logger;
  * 
  * @author maicon
  */
-public class Utilitarios {
+public class Utilitarios implements Serializable {
+	
+	private static final long serialVersionUID = 1L;
 	
 	private static final Logger LOG = Logger.getLogger(Utilitarios.class);
 	
@@ -618,6 +625,69 @@ public class Utilitarios {
 			LOG.error("Algoritmo não encontrado", e);
 		}
     	return retorno.toString();
+	}
+	
+	/**
+	 * 
+	 * @param destino
+	 * @param fileUploaded
+	 */
+	public static void copyUploadFileToFile(File destino, InputStream is){
+		FileOutputStream fos = null;
+		
+        try {
+			fos = new  FileOutputStream(destino);
+			
+			byte[] buff = new byte[2048];
+			while ( is.read(buff)  > -1){
+				fos.write(buff);
+			}
+			
+			fos.flush();
+			
+		} catch (FileNotFoundException e) {
+			LOG.error("Arquivo não encontrado.", e);
+		} catch (IOException e) {
+			LOG.error("Erro de IO.", e);
+		} finally {
+			try {
+				if (fos != null){
+					fos.close();
+				}
+				if (is != null) {
+					is.close();
+				}
+			} catch (IOException e) {
+				LOG.error("Erro ao fechar os arquivos.", e);
+			}
+		}
+	}
+	
+	public static void moveArquivoDiretorio(File origem, File destino){
+		try {
+			
+			FileInputStream fis = new FileInputStream(origem);
+			FileOutputStream fos = new FileOutputStream(destino);			
+			
+			try {
+				
+				byte[] buff = new byte[2048];
+				while ( fis.read(buff)  > -1){
+					fos.write(buff);
+				}
+				
+				fos.flush();
+				
+			} finally {
+				fos.close();
+				fis.close();
+			}
+			
+			origem.delete();
+			
+		} catch (IOException e) {
+			LOG.error("Erro ao copiar arquivo", e);
+		}
 	}
 
 }
