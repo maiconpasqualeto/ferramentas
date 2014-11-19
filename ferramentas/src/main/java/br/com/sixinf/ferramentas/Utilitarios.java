@@ -663,7 +663,25 @@ public class Utilitarios implements Serializable {
 		}
 	}
 	
+	/**
+	 * 
+	 * @param origem
+	 * @param destino
+	 */
 	public static void moveArquivoDiretorio(File origem, File destino){
+		
+		copiaArquivoParaOutroDiretorio(origem, destino);
+			
+		origem.delete();
+		
+	}
+	
+	/**
+	 * 
+	 * @param origem
+	 * @param destino
+	 */
+	public static void copiaArquivoParaOutroDiretorio(File origem, File destino){
 		try {
 			
 			FileInputStream fis = new FileInputStream(origem);
@@ -682,12 +700,9 @@ public class Utilitarios implements Serializable {
 				fos.close();
 				fis.close();
 			}
-			
-			origem.delete();
-			
+						
 		} catch (IOException e) {
 			LOG.error("Erro ao copiar arquivo", e);
 		}
 	}
-
 }
