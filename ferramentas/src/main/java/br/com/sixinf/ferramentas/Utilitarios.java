@@ -705,4 +705,99 @@ public class Utilitarios implements Serializable {
 			LOG.error("Erro ao copiar arquivo", e);
 		}
 	}
+	
+	/**
+	 * Funçãoo para calcular o digito verificador de um número no módulo 10.
+	 * 
+	 * @param numero - Número que a ser usado para calcular o digito verificador
+	 * @param pesoInicial - Menor valor que o peso pode assumir
+	 * @param pesoFinal - Maior valor que o peso pode assumir
+	 * @param quantidadeDigitos - Quantidade de dígitos que compõe o digito verificador
+	 * @return DAC - Dígito de Auto-Conferência calculado
+	 * @author maicon
+	 */
+	public static String calculaDigitoVerificadorModulo10(String numero,
+			Integer pesoInicial, Integer pesoFinal, Integer quantidadeDigitos) { // fun��o;
+		String DAC; // valor de retorno;
+		long soma = 0L, num = 0L, digito = 0L; // vari�veis de controle interno;
+		int multiplicador = pesoFinal; // peso multiplicador;
+		for (int i = numero.length() - 1; i >= 0; --i) {	// para numero da
+															// direita pra esquerda fa�a;
+			num = (long) Character.getNumericValue(numero.charAt(i));	// pega
+																		// o digito;
+			num *= multiplicador;	// multiplica pelo peso;
+			multiplicador = (multiplicador > pesoInicial) ? multiplicador - 1
+					: pesoFinal;	// atualiza para o novo peso;
+			num = (num / 1000000000)	// caso o resultado tenha mais de uma casa decimal
+					+ ((num % 1000000000) / 100000000)	// somar os valores absolutos do 
+					+ ((num % 100000000) / 10000000)	// n�mero;
+					+ ((num % 10000000) / 1000000)
+					+ ((num % 1000000) / 100000)
+					+ ((num % 100000) / 10000)
+					+ ((num % 10000) / 1000)
+					+ ((num % 1000) / 100) + ((num % 100) / 10) + (num % 10);
+			soma += num;	// soma os valores dos produtos calculados;
+		} // fim do para;
+		digito = (10 - (soma % 10)) % 10;	// calcula o digito de acordo com a
+											// fun��o especificado;
+		DAC = new String(String.valueOf(digito));	// coloca na String
+													// o digito calculado;
+		if (quantidadeDigitos > 1) {	// se a quantidade de digito(s)
+										// verificador(es) > 1 ent�o;
+			return DAC.concat(calculaDigitoVerificadorModulo10(
+						numero.concat(DAC), pesoInicial, pesoFinal,
+						quantidadeDigitos - 1));	// chama a função
+													// recursivamente para
+													// calcular os digitos
+													// restantes de acordo
+													// com as especificação;
+		} else { // senão;
+			return DAC; // É apenas um digito e retorna o DAC;
+		} // fim do se;
+	} // fim da funçãoo;
+	
+	/**
+	 * Função para calcular o digito verificador de um número no módulo 11.
+	 * 
+	 * @param numero - Número que a ser usado para calcular o digito verificador
+	 * @param pesoInicial - Menor valor que o peso pode assumir
+	 * @param pesoFinal - Maior valor que o peso pode assumir
+	 * @param quantidadeDigitos - Quantidade de dígitos que compõe o digito verificador
+	 * @return DAC - Dígito de Auto-Conferência calculado
+	 * 
+	 * @author maicon
+	 */
+	public static String calculaDigitoVerificadorModulo11(String numero,
+			Integer pesoInicial, Integer pesoFinal, Integer quantidadeDigitos) { // fun��o
+		String DAC; // valor de retorno;
+		long soma = 0L, num = 0L, digito = 0L; // vari�veis de controle interno;
+		int multiplicador = pesoInicial; // peso multiplicador;
+		for (int i = numero.length() - 1; i >= 0; --i) {	// para numero da
+															// direita pra esquerda fa�a;
+			num = (long) Character.getNumericValue(numero.charAt(i));	// pega
+																		// o digito;
+			num *= multiplicador;	// multiplica pelo peso;
+			multiplicador = (multiplicador < pesoFinal) ? multiplicador + 1
+					: pesoInicial;	// atualiza para o novo peso;
+			soma += num;	// soma os valores dos produtos calculados;
+		}
+		digito = ( 11 - ( ( ( soma % 11 ) == 1) ? 0 : ( soma % 11 ) ) ) % 11; // calcula
+																// o digito de acordo com a
+																// fun��o especificado;
+		DAC = new String(String.valueOf(digito));	// coloca na String
+													// o digito calculado;
+		if (quantidadeDigitos > 1) {	// se a quantidade de digito(s)
+										// verificador(es) > 1 ent�o;
+			return DAC.concat(calculaDigitoVerificadorModulo11(
+					numero.concat(DAC), pesoInicial, pesoFinal,
+					quantidadeDigitos - 1));	// chama a fun��o
+												// recursivamente para
+												// calcular os digitos
+												// restantes de acordo
+												// com as especifica��o;
+		} else { // sen�o;
+			return DAC; // � apenas um digito e retorna o DAC;
+		} // fim do se;
+	} // fim da fun��o;
+	
 }
