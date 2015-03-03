@@ -799,5 +799,32 @@ public class Utilitarios implements Serializable {
 			return DAC; // � apenas um digito e retorna o DAC;
 		} // fim do se;
 	} // fim da fun��o;
+		
 	
+	/**
+	 * Funcao que abrevia nomes até um tamanho máximo
+	 * 
+	 * @param nome
+	 * @param idx - indica a partir de qual sobrenome sera abreviado 
+	 * @param tamanhoMaximoNome - é o tamanho máximo que o nome deve ficar
+	 * @return
+	 */
+	public static String abreviaNome(String nome, int idx, int tamanhoMaximoNome) {
+		if (nome.length() > tamanhoMaximoNome) {
+			
+			String[] partes = nome.split("\\s+");
+			String s = partes[idx];
+			if (s.length() > 2 && 
+					!s.equalsIgnoreCase("das") &&
+					!s.equalsIgnoreCase("dos")) {
+				nome = nome.replace(s, s.substring(0, 1).toUpperCase() + '.');
+			} 
+			
+			idx++;
+			
+			nome = abreviaNome(nome, idx, tamanhoMaximoNome);
+		}
+		
+		return nome;
+	}
 }
