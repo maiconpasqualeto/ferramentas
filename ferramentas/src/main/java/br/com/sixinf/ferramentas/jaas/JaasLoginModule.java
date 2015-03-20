@@ -22,6 +22,7 @@ import javax.security.auth.spi.LoginModule;
 import org.apache.log4j.Logger;
 
 import br.com.sixinf.ferramentas.jaas.dao.SegurancaDAO;
+import br.com.sixinf.ferramentas.persistencia.Entidade;
 import br.com.sixinf.ferramentas.seguranca.persistencia.UsuarioSeguranca;
 
 
@@ -56,10 +57,10 @@ public class JaasLoginModule implements LoginModule {
 	    	
 	    	handler.handle(callbacks);
 	    	
-	    	String cpf = ((NameCallback) callbacks[0]).getName();
+	    	String nomeUsuario = ((NameCallback) callbacks[0]).getName();
 	        String password = String.valueOf(((PasswordCallback) callbacks[1]).getPassword());
 	        
-	        UsuarioSeguranca u = SegurancaDAO.getInstance().buscarUsuarioPorCpf(cpf);
+	        UsuarioSeguranca u = SegurancaDAO.getInstance().buscarUsuario(nomeUsuario);
 			
 			if (u == null) {
 				FacesMessage m = new FacesMessage(
@@ -69,7 +70,7 @@ public class JaasLoginModule implements LoginModule {
 				throw new LoginException("Usuário não cadastrado");
 			}
 			
-			if (!u.getStatus().equals('A')) {
+			if (!u.getStatus().equals(Entidade.StatusRegistro.A)) {
 				FacesMessage m = new FacesMessage(
 						FacesMessage.SEVERITY_ERROR, "Usuário desativado, acesso negado", "Usuário desativado, acesso negado");
 				FacesContext.getCurrentInstance().addMessage(null, m);

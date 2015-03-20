@@ -42,8 +42,8 @@ public class UsuarioSeguranca implements Entidade, Serializable {
 	@Column(name="senha")
 	private String senha;
 	
-	@Column(name="status")
-	@Enumerated(EnumType.STRING)
+	@Column(name="status_registro")
+	@Enumerated(value=EnumType.STRING)
 	private Entidade.StatusRegistro status;
 	
 	@Override

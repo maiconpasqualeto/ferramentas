@@ -39,7 +39,7 @@ public class SegurancaDAO extends BridgeBaseDAO {
 	 * @param cpf
 	 * @return
 	 */
-	public UsuarioSeguranca buscarUsuarioPorCpf(String nomeUsuario) {
+	public UsuarioSeguranca buscarUsuario(String nomeUsuario) {
 		EntityManager em = AdministradorPersistencia.getEntityManager();
 		
 		UsuarioSeguranca obj = null;

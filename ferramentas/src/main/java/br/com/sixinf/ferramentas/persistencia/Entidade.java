@@ -15,18 +15,21 @@ public interface Entidade {
 	
 	public enum StatusRegistro {
 				
-		ATIVO('A'),  
-		INATIVO('D');
+		A("ATIVO"),  
+		D("INATIVO");
 		
-		private final char status;
+		private String descricao;
 		
-		private StatusRegistro(char status) {
-			this.status = status;
+		private StatusRegistro(String descricao) {
+			this.descricao = descricao;
 		}
 		
-		public char getStatus() {
-			return status;
+		public Character getStatus() {
+			return this.name().charAt(0);
 		}		
 		
+		public String getDescricao() {
+			return this.descricao;
+		}
 	}
 }
