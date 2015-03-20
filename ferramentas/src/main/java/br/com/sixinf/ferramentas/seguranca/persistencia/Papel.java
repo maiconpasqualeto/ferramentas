@@ -28,6 +28,8 @@ import br.com.sixinf.ferramentas.persistencia.Entidade;
 @Table(name="papel")
 public class Papel implements Entidade, Serializable {
 
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@SequenceGenerator(name="seqPapel", sequenceName="papel_id_papel_seq")
 	@GeneratedValue(strategy=GenerationType.IDENTITY, generator="seqPapel")

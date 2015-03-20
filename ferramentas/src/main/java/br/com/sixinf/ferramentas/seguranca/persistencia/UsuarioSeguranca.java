@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -15,13 +17,16 @@ import javax.persistence.Table;
 import br.com.sixinf.ferramentas.persistencia.Entidade;
 
 @Entity
-@Table(name="usuario")
-public class Usuario implements Entidade, Serializable {
+@Table(name="usuario_seguranca")
+public class UsuarioSeguranca implements Entidade, Serializable {
 	
+	private static final long serialVersionUID = 1L;
+
 	@Id
-	@SequenceGenerator(name="seqUsuario", sequenceName="usuario_id_usuario_seq")
-	@GeneratedValue(strategy=GenerationType.IDENTITY, generator="seqUsuario")
-	@Column(name="id_usuario")
+	@SequenceGenerator(name="seqUsuarioSeguranca", 
+		sequenceName="usuario_seguranca_id_usuario_seguranca_seq", allocationSize=1)
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="seqUsuarioSeguranca")
+	@Column(name="id_usuario_seguranca")
 	private Long idUsuario;
 	
 	@Column(name="nome_usuario")
@@ -36,6 +41,10 @@ public class Usuario implements Entidade, Serializable {
 	
 	@Column(name="senha")
 	private String senha;
+	
+	@Column(name="status")
+	@Enumerated(EnumType.STRING)
+	private Entidade.StatusRegistro status;
 	
 	@Override
 	public Long getIdentificacao() {
@@ -82,5 +91,12 @@ public class Usuario implements Entidade, Serializable {
 		this.pepel = pepel;
 	}
 
-		
+	public Entidade.StatusRegistro getStatus() {
+		return status;
+	}
+
+	public void setStatus(Entidade.StatusRegistro status) {
+		this.status = status;
+	}
+	
 }

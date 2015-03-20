@@ -25,6 +25,8 @@ import br.com.sixinf.ferramentas.persistencia.Entidade;
 @Table(name="acao")
 public class Acao implements Entidade, Serializable {
 
+	private static final long serialVersionUID = 1L;
+	
 	@Id
 	@SequenceGenerator(name="seqAcao", sequenceName="acao_id_acao_seq")
 	@GeneratedValue(strategy=GenerationType.IDENTITY, generator="seqAcao")

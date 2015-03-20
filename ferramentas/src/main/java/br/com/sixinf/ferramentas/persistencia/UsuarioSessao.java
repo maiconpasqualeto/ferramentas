@@ -3,7 +3,7 @@
  */
 package br.com.sixinf.ferramentas.persistencia;
 
-import br.com.sixinf.ferramentas.seguranca.persistencia.Usuario;
+import br.com.sixinf.ferramentas.seguranca.persistencia.UsuarioSeguranca;
 
 /**
  * @author maicon.pasqualeto
@@ -13,7 +13,7 @@ public class UsuarioSessao {
 	
 	private static UsuarioSessao usuarioSessao;
 	
-	private Usuario usuario;
+	private UsuarioSeguranca usuario;
 	
 	public static UsuarioSessao getInstance(){
 		if (usuarioSessao == null){
@@ -22,11 +22,11 @@ public class UsuarioSessao {
 		return usuarioSessao;
 	}
 
-	public Usuario getUsuario() {
+	public UsuarioSeguranca getUsuario() {
 		return usuario;
 	}
 
-	public void setUsuario(Usuario usuario) {
+	public void setUsuario(UsuarioSeguranca usuario) {
 		this.usuario = usuario;
 	}
 	
