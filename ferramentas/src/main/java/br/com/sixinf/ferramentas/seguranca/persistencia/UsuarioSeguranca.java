@@ -14,6 +14,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import br.com.sixinf.ferramentas.Utilitarios;
 import br.com.sixinf.ferramentas.persistencia.Entidade;
 
 @Entity
@@ -97,6 +98,16 @@ public class UsuarioSeguranca implements Entidade, Serializable {
 
 	public void setStatus(Entidade.StatusRegistro status) {
 		this.status = status;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public String getSenhaSHA2() {
+		if (senha != null) 
+			return Utilitarios.geraHashSHA2(senha);
+		return "";
 	}
 	
 }

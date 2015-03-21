@@ -6,6 +6,7 @@ package br.com.sixinf.ferramentas.jaas.beans;
 import java.io.Serializable;
 
 import javax.faces.context.FacesContext;
+import javax.security.auth.login.LoginException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
@@ -51,22 +52,16 @@ public class SegurancaBean implements Serializable {
     } 
 	
 	/**
+	 * @throws ServletException 
 	 * @throws LoggerException 
 	 * 
 	 */
-	public void autenticarUsuario() throws LoggerException {
-		try {
-			
-			if (getFacesContext().getExternalContext().getUserPrincipal() == null)
-				getRequest().login(usuario.getNomeUsuario(), usuario.getSenha());
-			
-			UserPrincipal up = (UserPrincipal) getFacesContext().getExternalContext().getUserPrincipal();
-			this.usuario = up.getUsuario();
-						
-		} catch (Exception e) {
-			//Logger.getLogger(getClass()).error("Erro ao efetuar login jaas", e);
-			throw new LoggerException("Erro ao efetuar login jaas", e, Logger.getLogger(getClass()));
-		}		
+	public void autenticarUsuario() throws ServletException {
+		if (getFacesContext().getExternalContext().getUserPrincipal() == null)
+			getRequest().login(usuario.getNomeUsuario(), usuario.getSenhaSHA2());
+		
+		UserPrincipal up = (UserPrincipal) getFacesContext().getExternalContext().getUserPrincipal();
+		this.usuario = up.getUsuario();
 	}
 	
 	/**
