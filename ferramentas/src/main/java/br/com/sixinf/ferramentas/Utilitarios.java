@@ -784,7 +784,7 @@ public class Utilitarios implements Serializable {
 		digito = ( 11 - ( ( ( soma % 11 ) == 1) ? 0 : ( soma % 11 ) ) ) % 11; // calcula
 																// o digito de acordo com a
 																// fun��o especificado;
-		DAC = new String(String.valueOf(digito));	// coloca na String
+		DAC = String.valueOf(digito);	// coloca na String
 													// o digito calculado;
 		if (quantidadeDigitos > 1) {	// se a quantidade de digito(s)
 										// verificador(es) > 1 ent�o;
@@ -827,4 +827,55 @@ public class Utilitarios implements Serializable {
 		
 		return nome;
 	}
+	
+	/**
+	 * Função para calcular o digito verificador de um número no módulo 11.
+	 * Para o calculo do dígito do nosso número no bradesco, quando o resto da divisão por 11 for == 1
+	 * 		o dígito deve retornar a letra "P" e não zero. 
+	 * 
+	 * @param numero - Número que a ser usado para calcular o digito verificador
+	 * @param pesoInicial - Menor valor que o peso pode assumir
+	 * @param pesoFinal - Maior valor que o peso pode assumir
+	 * @param quantidadeDigitos - Quantidade de dígitos que compõe o digito verificador
+	 * @return DAC - Dígito de Auto-Conferência calculado
+	 * 
+	 * @author maicon
+	 */
+	public static String calculaDigitoVerificadorModulo11Resto1EhP(String numero,
+			Integer pesoInicial, Integer pesoFinal, Integer quantidadeDigitos) { // fun��o
+		String DAC; // valor de retorno;
+		long soma = 0L, num = 0L, digito = 0L; // vari�veis de controle interno;
+		int multiplicador = pesoInicial; // peso multiplicador;
+		for (int i = numero.length() - 1; i >= 0; --i) {	// para numero da
+															// direita pra esquerda fa�a;
+			num = (long) Character.getNumericValue(numero.charAt(i));	// pega
+																		// o digito;
+			num *= multiplicador;	// multiplica pelo peso;
+			multiplicador = (multiplicador < pesoFinal) ? multiplicador + 1
+					: pesoInicial;	// atualiza para o novo peso;
+			soma += num;	// soma os valores dos produtos calculados;
+		}
+		
+		//digito = ( 11 - ( ( ( soma % 11 ) == 1) ? 0 : ( soma % 11 ) ) ) % 11; // calcula
+		if (( soma % 11 ) == 1)
+			digito = -1;
+		else
+			digito = ( 11 - ( soma % 11 ) ) % 11; // calcula
+												  // o digito de acordo com a
+												  // fun��o especificado;		
+		DAC = (digito == -1) ? "P" : String.valueOf(digito);	// coloca na String
+																// o digito calculado;
+		if (quantidadeDigitos > 1) {	// se a quantidade de digito(s)
+										// verificador(es) > 1 ent�o;
+			return DAC.concat(calculaDigitoVerificadorModulo11(
+					numero.concat(DAC), pesoInicial, pesoFinal,
+					quantidadeDigitos - 1));	// chama a fun��o
+												// recursivamente para
+												// calcular os digitos
+												// restantes de acordo
+												// com as especifica��o;
+		} else { // sen�o;
+			return DAC; // � apenas um digito e retorna o DAC;
+		} // fim do se;
+	} // fim da fun��o;
 }
