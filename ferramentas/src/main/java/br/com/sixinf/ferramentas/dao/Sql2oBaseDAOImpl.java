@@ -3,16 +3,16 @@
  */
 package br.com.sixinf.ferramentas.dao;
 
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
 import java.io.Serializable;
 import java.util.List;
-
-import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
 
 import org.apache.log4j.Logger;
 import org.sql2o.Connection;
 import org.sql2o.Sql2o;
 
+import br.com.sixinf.ferramentas.Utilitarios;
 import br.com.sixinf.ferramentas.persistencia.AdministradorPersistencia;
 import br.com.sixinf.ferramentas.persistencia.AdministradorPersistenciaSql2o;
 
@@ -27,18 +27,28 @@ public class Sql2oBaseDAOImpl implements IBaseDAO {
     @Override
     public <T> T adicionar(T o) throws DAOException{
             Sql2o sql2o = AdministradorPersistenciaSql2o.getsql2o();            
-
+            Connection c = sql2o.beginTransaction();
+            
             try {
-            	Connection c = sql2o.beginTransaction();
-
-                c.createQuery(queryText)
-
-                tr.commit();
-            } catch (DAOException e) {
-                tr.rollback();
+            	String tableName = o.getClass().getCanonicalName();
+            	tableName = Utilitarios.splitStringByCapitalLeter(tableName);
+            	            	
+            	StringBuilder str = new StringBuilder("insert into " + tableName + " (");
+            	PropertyDescriptor[] pds = Introspector.getBeanInfo(o.getClass()).getPropertyDescriptors();
+            	Utilitarios.appendClassPropertiesList(str, pds);
+            	str.append(") values (");
+            	Utilitarios.appendClassValueList(str, pds); 
+            	str.append(")");
+            	
+                c.createQuery(str.toString()).bind(o).executeUpdate();
+                
+                c.commit();
+                
+            } catch (Exception e) {
+            	c.rollback();
                 throw new DAOException("Erro ao incluir objeto", e, logger);
-            } finally {
-                em.close();
+			} finally {
+                c.close();
             }
 
             return o;
@@ -46,21 +56,31 @@ public class Sql2oBaseDAOImpl implements IBaseDAO {
 
     @Override
     public <T> void alterar(T o) throws DAOException{
-            EntityManager em = AdministradorPersistencia.getEntityManager();
-            EntityTransaction tr = em.getTransaction();
+    	Sql2o sql2o = AdministradorPersistenciaSql2o.getsql2o();            
+        Connection c = sql2o.beginTransaction();
+        
+        try {
+        	String tableName = o.getClass().getCanonicalName();
+        	tableName = Utilitarios.splitStringByCapitalLeter(tableName);
+        	
+        	StringBuilder str = new StringBuilder("update " + tableName + " (");
+        	PropertyDescriptor[] pds = Introspector.getBeanInfo(o.getClass()).getPropertyDescriptors();
+        	Utilitarios.appendClassPropertiesList(str, pds);
+        	str.append(") values (");
+        	Utilitarios.appendClassValueList(str, pds); 
+        	str.append(")");
+        	
+            c.createQuery(str.toString()).bind(o).executeUpdate();
+            
+            c.commit();
+            
+        } catch (Exception e) {
+        	c.rollback();
+            throw new DAOException("Erro ao alterar objeto", e, logger);
+		} finally {
+            c.close();
+        }
 
-            try {
-                tr.begin();
-
-                GenericDAO.merge(o, em);
-
-                tr.commit();
-            } catch (DAOException e) {
-                tr.rollback();
-                throw new DAOException("Erro ao alterar objeto", e, logger);
-            } finally {
-                em.close();
-            }
     }
 
     @Override

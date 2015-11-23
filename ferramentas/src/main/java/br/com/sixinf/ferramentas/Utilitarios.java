@@ -878,4 +878,57 @@ public class Utilitarios implements Serializable {
 			return DAC; // � apenas um digito e retorna o DAC;
 		} // fim do se;
 	} // fim da fun��o;
+	
+	/**
+	 * 
+	 * @param parameter
+	 * @return
+	 */
+	public static String splitStringByCapitalLeter(String parameter) {
+		String[] r = parameter.split("(?=\\p{Upper})");
+		if (r.length == 1)
+			return parameter.toLowerCase();
+		
+		parameter = "";
+		
+		for (int i = 0; i< r.length; i++) {
+			if (i > 0 &&
+					i < r.length)
+				parameter += "_";
+			parameter += r[i].toLowerCase();
+		}
+		return parameter;
+	}
+	
+	/**
+	 * 
+	 * @param str
+	 * @param pds
+	 */
+	public static void appendClassPropertiesList(StringBuilder str, PropertyDescriptor[] pds) {
+		int i = 1; // não conta a propriedade 'class'
+    	for (PropertyDescriptor pd : pds) {
+    		if (pd.getName().equals("class"))
+    			continue;
+    		str.append(pd.getName());
+    		if (++i < pds.length)
+    			str.append(", ");
+    	}
+	}
+	
+	/**
+	 * 
+	 * @param str
+	 * @param pds
+	 */
+	public static void appendClassValueList(StringBuilder str, PropertyDescriptor[] pds) {
+		int i = 1; // não conta a propriedade 'class'
+    	for (PropertyDescriptor pd : pds) {
+    		if (pd.getName().equals("class"))
+    			continue;
+    		str.append(":" + pd.getName());
+    		if (++i < pds.length)
+    			str.append(", ");
+    	}
+	}
 }
