@@ -31,7 +31,7 @@ public class Sql2oBaseDAOImpl implements IBaseDAO {
             try {
             	String tableName = o.getClass().getCanonicalName();
             	tableName = Utilitarios.splitStringByCapitalLeter(tableName);
-            	            	
+            	
             	StringBuilder str = new StringBuilder("insert into " + tableName + " (");
             	PropertyDescriptor[] pds = Introspector.getBeanInfo(o.getClass()).getPropertyDescriptors();
             	appendClassPropertiesList(str, pds);
