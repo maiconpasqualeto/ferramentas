@@ -6,6 +6,7 @@ package br.com.sixinf.ferramentas.email;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.apache.commons.mail.DefaultAuthenticator;
 import org.apache.commons.mail.Email;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.ImageHtmlEmail;
@@ -20,19 +21,23 @@ import org.apache.log4j.Logger;
 public class EmailUtils {
 	
 	private String fromHostName; // "email-ssl.com.br" // "smtp.zoho.com"
+	private int port; // 465
 	private String fromEmail; // "webmaster@lordpetstore.com.br" // "maicon@sixinf.com.br"
 	private String fromEmailName; // "Ecommerce Lord Pet Store" // "Lord Pet Store"
 	private String fromUser; // "webmaster@lordpetstore.com.br" // "maicon@sixinf.com.br"
 	private String fromPass; // "mariana123!@"                  // "mariana123!@"
 	
+	
 	public EmailUtils(String fromHostName, String fromEmail,
-			String fromEmailName, String fromUser, String fromPass) {
+			String fromEmailName, String fromUser, String fromPass,
+			int port) {
 		super();
 		this.fromHostName = fromHostName;
 		this.fromEmail = fromEmail;
 		this.fromEmailName = fromEmailName;
 		this.fromUser = fromUser;
 		this.fromPass = fromPass;
+		this.port = port;
 	}
 
 	public String getFromHostName() {
@@ -73,6 +78,14 @@ public class EmailUtils {
 
 	public void setFromPass(String fromPass) {
 		this.fromPass = fromPass;
+	}
+
+	public int getPort() {
+		return port;
+	}
+
+	public void setPort(int port) {
+		this.port = port;
 	}
 
 	/**
@@ -121,11 +134,11 @@ public class EmailUtils {
 					}
 			        em.setHostName(fromHostName); // o servidor SMTP para envio do e-mail  
 			        em.addTo(enderecoEmail, nome); //destinatário  
-			        em.setFrom("webmaster@lordpetstore.com.br", "Ecommerce Lord Pet Store"); // remetente  
+			        em.setFrom(fromEmail, fromEmailName); // remetente  
 			        em.setSubject(assunto); // assunto do e-mail  
 			        
-			        em.setAuthentication("webmaster@lordpetstore.com.br", "mariana123!@");  
-			        em.setSmtpPort(465);  
+			        em.setAuthenticator(new DefaultAuthenticator(fromUser, fromPass));  
+			        em.setSmtpPort(port);  
 			        em.setSSLOnConnect(true);  
 			        em.setStartTLSEnabled(true);  
 			        em.send();
