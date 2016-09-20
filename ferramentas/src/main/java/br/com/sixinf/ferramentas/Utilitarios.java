@@ -899,5 +899,20 @@ public class Utilitarios implements Serializable {
 		}
 		return parameter;
 	}
+	
+	/**
+	 * 
+	 * @param bytes
+	 * @return
+	 */
+	public static String converteDadosBinariosParaStringHexa(byte[] bytes) {
+        StringBuilder hex = new StringBuilder();
+        int i = 0;
+        while (i < bytes.length) {
+            String str = Integer.toHexString(bytes[i++] & 0xFF);
+            hex.append(str.length() >= 2 ? str : "0" + str);
+        }
+        return hex.toString().toUpperCase();
+    }
 		
 }
