@@ -302,5 +302,19 @@ public class UtilsBitByte {
 
         return failure;
     }
+    
+    /**
+     * 
+     * @param n
+     * @return
+     */
+    public static String convertToBinaryString(byte[] array) {
+        StringBuilder sb = new StringBuilder("");
+        for (byte b : array) {
+            sb.append(Integer.toBinaryString(b & 255 | 256).substring(1));
+        }
+        return sb.toString();
+    }
+
 	
 }
