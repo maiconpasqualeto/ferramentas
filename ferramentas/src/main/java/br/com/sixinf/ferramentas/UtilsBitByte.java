@@ -316,5 +316,39 @@ public class UtilsBitByte {
         return sb.toString();
     }
 
+    
+    /**
+     * Converts a four byte array to a long
+     *
+     * @param two bytes to long
+     * @return a long representing the unsigned int
+     */
+    public static long toLongBigEndian(byte b0, byte b1, byte b2, byte b3) {
+    	long l = 0;
+        l |= b0 & 0xFF;
+        l <<= 8;
+        l |= b1 & 0xFF;
+        l <<= 8;
+        l |= b2 & 0xFF;
+        l <<= 8;
+        l |= b3 & 0xFF;
+        return l;
+    }
+    
+    /**
+	 * 
+	 * @param pacote
+	 * @return byte[] com tamnho de 2 bytes
+	 */
+	public static byte[] calculaCheckSum(byte[] pacote) {
+		int sum = 0;
+		for (byte b : pacote) {
+			sum += (b & 0xff);
+		}
+		byte[] cs = new byte[2];		
+		cs[0] = (byte) ((sum >> 8) & 0xff);
+		cs[1] = (byte) (sum & 0xff);
+		return cs;
+	}
 	
 }
